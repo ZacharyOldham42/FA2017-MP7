@@ -22,5 +22,4 @@ public class GameOfLife {
 	public void getUserInput() {
 		
 	}
-
 }
