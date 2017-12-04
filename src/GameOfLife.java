@@ -51,6 +51,5 @@ public class GameOfLife {
 			int tempWidth = Integer.parseInt(secondSplit[1].substring(0, secondSplit[1].length() - 1));
 			grid[tempHeight][tempWidth] = true;
 		}
-		// At this point we are done gathering user input
 	}
 }
