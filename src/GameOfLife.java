@@ -20,12 +20,18 @@ public class GameOfLife {
 	}	
 	
 	// TODO: Method to return the next 'frame' of the game
-	public boolean[][] getNextFrame(boolean[][] grid) {
-		return grid;
+	public boolean[][] getNextFrame() {
+		boolean[][] temp = new boolean[height][width];
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
+				temp[i][j] = isAlive(i, j);
+			}
+		}
+		return temp;
 	}
 	
 	// TODO: Method to determine whether a space should be alive or dead next frame
-	public boolean isAlive(boolean[][] grid, int x, int y) {
+	public boolean isAlive(int tempHeight, int tempWidth) {
 		return false;
 	}
 	
