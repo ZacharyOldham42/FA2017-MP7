@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class GameOfLife {
@@ -13,7 +14,19 @@ public class GameOfLife {
 	// TODO: Driving main method
 	public static void main(String[] args) {
 		GameOfLife game = new GameOfLife();
-		game.drawGrid();
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 100; j++) {
+				System.out.println();
+			}
+			game.drawGrid();
+			game.grid = game.getNextFrame();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	// TODO: Method to draw grid
@@ -37,7 +50,7 @@ public class GameOfLife {
 			for(int j = 0; j < width; j++) {
 				char fill = ' ';
 				if (grid[i - 1][j]) {
-					fill = '0';
+					fill = 0x2588;
 				}
 				System.out.print(fill);
 				System.out.print('|');
@@ -58,8 +71,32 @@ public class GameOfLife {
 	}
 	
 	// TODO: Method to determine whether a space should be alive or dead next frame
-	public boolean isAlive(int tempHeight, int tempWidth) {
-		return false;
+	public boolean isAlive(int spaceX, int spaceY) {
+		int[] neighborsX = {-1,  0,  1, 1, 1, 0, -1, -1}; //top left to mid left clockwise
+        int[] neighborsY = {-1, -1, -1, 0, 1, 1,  1,  0}; //top left to mid left clockwise
+        boolean cell = false;
+        int numalive = 0;
+        boolean alive = grid[spaceX][spaceY];
+        for (int i = 0; i < neighborsX.length; i++) {
+            if (spaceX + neighborsX[i] >= 0 && spaceX + neighborsX[i] <= width-1) {
+                if (spaceY + neighborsY[i] >= 0 && spaceY + neighborsY[i] <= height-1) {
+                    cell = grid[spaceX + neighborsX[i]][spaceY + neighborsY[i]];
+                    if (cell) {
+                        numalive++;
+                    }
+                }
+            }
+        }
+        if (alive && numalive < 2) {
+            return false; //underpopulation
+        } else if (alive && (numalive == 2 || numalive == 3)) {
+            return true; //lives on
+        } else if (alive && numalive > 3) {
+            return false; //overpopulation
+        } else if (!alive && numalive == 3) {
+            return true;
+        }
+        return false;
 	}
 	
 	// Method to get user input
