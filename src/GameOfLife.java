@@ -11,25 +11,22 @@ public class GameOfLife {
 		getUserInput();
 	}
 	
-	// TODO: Driving main method
 	public static void main(String[] args) {
 		GameOfLife game = new GameOfLife();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 10; i--) {
 			for (int j = 0; j < 100; j++) {
 				System.out.println();
 			}
 			game.drawGrid();
-			game.grid = game.getNextFrame();
+			game.grid = game.getNextFrameAlt();
 			try {
-				Thread.sleep(500);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
-	// TODO: Method to draw grid
 	// Example of a grid with height 2 and width 3
 	//   1 2 3
 	// 1| |0| |
@@ -59,7 +56,6 @@ public class GameOfLife {
 		}
 	}	
 	
-	// TODO: Method to return the next 'frame' of the game
 	public boolean[][] getNextFrame() {
 		boolean[][] temp = new boolean[height][width];
 		for(int i = 0; i < height; i++) {
@@ -70,7 +66,16 @@ public class GameOfLife {
 		return temp;
 	}
 	
-	// TODO: Method to determine whether a space should be alive or dead next frame
+	public boolean[][] getNextFrameAlt() {
+		boolean[][] temp = new boolean[height][width];
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
+				temp[i][j] = isAliveAlt(i, j);
+			}
+		}
+		return temp;
+	}
+	
 	public boolean isAlive(int spaceX, int spaceY) {
 		int[] neighborsX = {-1,  0,  1, 1, 1, 0, -1, -1}; //top left to mid left clockwise
         int[] neighborsY = {-1, -1, -1, 0, 1, 1,  1,  0}; //top left to mid left clockwise
@@ -94,6 +99,59 @@ public class GameOfLife {
         } else if (alive && numalive > 3) {
             return false; //overpopulation
         } else if (!alive && numalive == 3) {
+            return true;
+        }
+        return false;
+	}
+	
+	public boolean isAliveAlt(int spaceY, int spaceX) {
+		boolean cell = false;
+		int numAlive = 0;
+		boolean alive = grid[spaceY][spaceX];
+		int[] neighborsY = new int[8];
+		int[] neighborsX = new int[8];
+		//Below
+		neighborsY[0] = spaceY;
+		neighborsX[0] = spaceX - 1;
+		
+		neighborsY[1] = spaceY;
+		neighborsX[1] = spaceX + 1;
+		
+		neighborsY[2] = spaceY - 1;
+		neighborsX[2] = spaceX - 1;
+		
+		neighborsY[3] = spaceY - 1;
+		neighborsX[3] = spaceX;
+		
+		neighborsY[4] = spaceY - 1;
+		neighborsX[4] = spaceX + 1;
+		
+		neighborsY[5] = spaceY + 1;
+		neighborsX[5] = spaceX - 1;
+		
+		neighborsY[6] = spaceY + 1;
+		neighborsX[6] = spaceX;
+		
+		neighborsY[7] = spaceY + 1;
+		neighborsX[7] = spaceX + 1;
+		for (int i = 0; i < neighborsY.length; i++) {
+			neighborsY[i] = neighborsY[i] + height;
+			neighborsY[i] = neighborsY[i] % height;
+			neighborsX[i] = neighborsX[i] + width;
+			neighborsX[i] = neighborsX[i] % width;
+		}
+		for (int i = 0; i < neighborsY.length; i++) {
+			if (grid[neighborsY[i]][neighborsX[i]]) {
+				numAlive++;
+			}
+		}
+		if (alive && numAlive < 2) {
+            return false; //underpopulation
+        } else if (alive && (numAlive == 2 || numAlive == 3)) {
+            return true; //lives on
+        } else if (alive && numAlive > 3) {
+            return false; //overpopulation
+        } else if (!alive && numAlive == 3) {
             return true;
         }
         return false;
