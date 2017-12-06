@@ -47,7 +47,7 @@ public class GameOfLife {
 			for(int j = 0; j < width; j++) {
 				char fill = ' ';
 				if (grid[i - 1][j]) {
-					fill = 0x2588;
+					fill = '0';
 				}
 				System.out.print(fill);
 				System.out.print('|');
